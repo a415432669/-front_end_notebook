@@ -1,0 +1,336 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>11-HTTP协议</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; tab-size: 4; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; overflow-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 40px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; }
+button, input, select, textarea { color: inherit; font: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 2; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px !important; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror-linenumber { user-select: none; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 32px; padding-right: 32px; padding-bottom: 0px; break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none 0s ease 0s; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="mermaid"] svg, [lang="flow"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+
+
+.CodeMirror { height: auto; }
+.CodeMirror.cm-s-inner { background: inherit; }
+.CodeMirror-scroll { overflow: auto hidden; z-index: 3; }
+.CodeMirror-gutter-filler, .CodeMirror-scrollbar-filler { background-color: rgb(255, 255, 255); }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); background: inherit; white-space: nowrap; }
+.CodeMirror-linenumber { padding: 0px 3px 0px 5px; text-align: right; color: rgb(153, 153, 153); }
+.cm-s-inner .cm-keyword { color: rgb(119, 0, 136); }
+.cm-s-inner .cm-atom, .cm-s-inner.cm-atom { color: rgb(34, 17, 153); }
+.cm-s-inner .cm-number { color: rgb(17, 102, 68); }
+.cm-s-inner .cm-def { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-variable { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-variable-2 { color: rgb(0, 85, 170); }
+.cm-s-inner .cm-variable-3 { color: rgb(0, 136, 85); }
+.cm-s-inner .cm-string { color: rgb(170, 17, 17); }
+.cm-s-inner .cm-property { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-operator { color: rgb(152, 26, 26); }
+.cm-s-inner .cm-comment, .cm-s-inner.cm-comment { color: rgb(170, 85, 0); }
+.cm-s-inner .cm-string-2 { color: rgb(255, 85, 0); }
+.cm-s-inner .cm-meta { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-qualifier { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-builtin { color: rgb(51, 0, 170); }
+.cm-s-inner .cm-bracket { color: rgb(153, 153, 119); }
+.cm-s-inner .cm-tag { color: rgb(17, 119, 0); }
+.cm-s-inner .cm-attribute { color: rgb(0, 0, 204); }
+.cm-s-inner .cm-header, .cm-s-inner.cm-header { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-quote, .cm-s-inner.cm-quote { color: rgb(0, 153, 0); }
+.cm-s-inner .cm-hr, .cm-s-inner.cm-hr { color: rgb(153, 153, 153); }
+.cm-s-inner .cm-link, .cm-s-inner.cm-link { color: rgb(0, 0, 204); }
+.cm-negative { color: rgb(221, 68, 68); }
+.cm-positive { color: rgb(34, 153, 34); }
+.cm-header, .cm-strong { font-weight: 700; }
+.cm-del { text-decoration: line-through; }
+.cm-em { font-style: italic; }
+.cm-link { text-decoration: underline; }
+.cm-error { color: red; }
+.cm-invalidchar { color: red; }
+.cm-constant { color: rgb(38, 139, 210); }
+.cm-defined { color: rgb(181, 137, 0); }
+div.CodeMirror span.CodeMirror-matchingbracket { color: rgb(0, 255, 0); }
+div.CodeMirror span.CodeMirror-nonmatchingbracket { color: rgb(255, 34, 34); }
+.cm-s-inner .CodeMirror-activeline-background { background: inherit; }
+.CodeMirror { position: relative; overflow: hidden; }
+.CodeMirror-scroll { height: 100%; outline: 0px; position: relative; box-sizing: content-box; background: inherit; }
+.CodeMirror-sizer { position: relative; }
+.CodeMirror-gutter-filler, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-vscrollbar { position: absolute; z-index: 6; display: none; }
+.CodeMirror-vscrollbar { right: 0px; top: 0px; overflow: hidden; }
+.CodeMirror-hscrollbar { bottom: 0px; left: 0px; overflow: hidden; }
+.CodeMirror-scrollbar-filler { right: 0px; bottom: 0px; }
+.CodeMirror-gutter-filler { left: 0px; bottom: 0px; }
+.CodeMirror-gutters { position: absolute; left: 0px; top: 0px; padding-bottom: 30px; z-index: 3; }
+.CodeMirror-gutter { white-space: normal; height: 100%; box-sizing: content-box; padding-bottom: 30px; margin-bottom: -32px; display: inline-block; }
+.CodeMirror-gutter-wrapper { position: absolute; z-index: 4; background: 0px 0px !important; border: none !important; }
+.CodeMirror-gutter-background { position: absolute; top: 0px; bottom: 0px; z-index: 4; }
+.CodeMirror-gutter-elt { position: absolute; cursor: default; z-index: 4; }
+.CodeMirror-lines { cursor: text; }
+.CodeMirror pre { border-radius: 0px; border-width: 0px; background: 0px 0px; font-family: inherit; font-size: inherit; margin: 0px; white-space: pre; overflow-wrap: normal; color: inherit; z-index: 2; position: relative; overflow: visible; }
+.CodeMirror-wrap pre { overflow-wrap: break-word; white-space: pre-wrap; word-break: normal; }
+.CodeMirror-code pre { border-right: 30px solid transparent; width: fit-content; }
+.CodeMirror-wrap .CodeMirror-code pre { border-right: none; width: auto; }
+.CodeMirror-linebackground { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 0; }
+.CodeMirror-linewidget { position: relative; z-index: 2; overflow: auto; }
+.CodeMirror-wrap .CodeMirror-scroll { overflow-x: hidden; }
+.CodeMirror-measure { position: absolute; width: 100%; height: 0px; overflow: hidden; visibility: hidden; }
+.CodeMirror-measure pre { position: static; }
+.CodeMirror div.CodeMirror-cursor { position: absolute; visibility: hidden; border-right: none; width: 0px; }
+.CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+.CodeMirror-focused div.CodeMirror-cursor { visibility: inherit; }
+.cm-searching { background: rgba(255, 255, 0, 0.4); }
+@media print {
+  .CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+}
+
+
+:root { --side-bar-bg-color: #fafafa; --control-text-color: #777; }
+html { font-size: 16px; }
+body { font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; color: rgb(51, 51, 51); line-height: 1.6; }
+#write { max-width: 860px; margin: 0px auto; padding: 30px 30px 100px; }
+#write > ul:first-child, #write > ol:first-child { margin-top: 30px; }
+a { color: rgb(65, 131, 196); }
+h1, h2, h3, h4, h5, h6 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-weight: bold; line-height: 1.4; cursor: text; }
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { text-decoration: none; }
+h1 tt, h1 code { font-size: inherit; }
+h2 tt, h2 code { font-size: inherit; }
+h3 tt, h3 code { font-size: inherit; }
+h4 tt, h4 code { font-size: inherit; }
+h5 tt, h5 code { font-size: inherit; }
+h6 tt, h6 code { font-size: inherit; }
+h1 { padding-bottom: 0.3em; font-size: 2.25em; line-height: 1.2; border-bottom: 1px solid rgb(238, 238, 238); }
+h2 { padding-bottom: 0.3em; font-size: 1.75em; line-height: 1.225; border-bottom: 1px solid rgb(238, 238, 238); }
+h3 { font-size: 1.5em; line-height: 1.43; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; color: rgb(119, 119, 119); }
+p, blockquote, ul, ol, dl, table { margin: 0.8em 0px; }
+li > ol, li > ul { margin: 0px; }
+hr { height: 2px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border: 0px none; overflow: hidden; box-sizing: content-box; }
+li p.first { display: inline-block; }
+ul, ol { padding-left: 30px; }
+ul:first-child, ol:first-child { margin-top: 0px; }
+ul:last-child, ol:last-child { margin-bottom: 0px; }
+blockquote { border-left: 4px solid rgb(223, 226, 229); padding: 0px 15px; color: rgb(119, 119, 119); }
+blockquote blockquote { padding-right: 0px; }
+table { padding: 0px; word-break: initial; }
+table tr { border-top: 1px solid rgb(223, 226, 229); margin: 0px; padding: 0px; }
+table tr:nth-child(2n), thead { background-color: rgb(248, 248, 248); }
+table tr th { font-weight: bold; border-width: 1px 1px 0px; border-top-style: solid; border-right-style: solid; border-left-style: solid; border-top-color: rgb(223, 226, 229); border-right-color: rgb(223, 226, 229); border-left-color: rgb(223, 226, 229); border-image: initial; border-bottom-style: initial; border-bottom-color: initial; margin: 0px; padding: 6px 13px; }
+table tr td { border: 1px solid rgb(223, 226, 229); margin: 0px; padding: 6px 13px; }
+table tr th:first-child, table tr td:first-child { margin-top: 0px; }
+table tr th:last-child, table tr td:last-child { margin-bottom: 0px; }
+.CodeMirror-lines { padding-left: 4px; }
+.code-tooltip { box-shadow: rgba(0, 28, 36, 0.3) 0px 1px 1px 0px; border-top: 1px solid rgb(238, 242, 242); }
+.md-fences, code, tt { border: 1px solid rgb(231, 234, 237); background-color: rgb(248, 248, 248); border-radius: 3px; padding: 2px 4px 0px; font-size: 0.9em; }
+code { background-color: rgb(243, 244, 244); padding: 0px 2px; }
+.md-fences { margin-bottom: 15px; margin-top: 15px; padding-top: 8px; padding-bottom: 6px; }
+.md-task-list-item > input { margin-left: -1.3em; }
+@media print {
+  html { font-size: 13px; }
+  table, pre { break-inside: avoid; }
+  pre { overflow-wrap: break-word; }
+}
+.md-fences { background-color: rgb(248, 248, 248); }
+#write pre.md-meta-block { padding: 1rem; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border: 0px; border-radius: 3px; color: rgb(119, 119, 119); margin-top: 0px !important; }
+.mathjax-block > .code-tooltip { bottom: 0.375rem; }
+.md-mathjax-midline { background: rgb(250, 250, 250); }
+#write > h3.md-focus::before { left: -1.5625rem; top: 0.375rem; }
+#write > h4.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h5.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h6.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+.md-image > .md-meta { border-radius: 3px; padding: 2px 0px 0px 4px; font-size: 0.9em; color: inherit; }
+.md-tag { color: rgb(167, 167, 167); opacity: 1; }
+.md-toc { margin-top: 20px; padding-bottom: 20px; }
+.sidebar-tabs { border-bottom: none; }
+#typora-quick-open { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); }
+#typora-quick-open-item { background-color: rgb(250, 250, 250); border-color: rgb(254, 254, 254) rgb(229, 229, 229) rgb(229, 229, 229) rgb(238, 238, 238); border-style: solid; border-width: 1px; }
+.on-focus-mode blockquote { border-left-color: rgba(85, 85, 85, 0.12); }
+header, .context-menu, .megamenu-content, footer { font-family: "Segoe UI", Arial, sans-serif; }
+.file-node-content:hover .file-node-icon, .file-node-content:hover .file-node-open-state { visibility: visible; }
+.mac-seamless-mode #typora-sidebar { background-color: var(--side-bar-bg-color); }
+.md-lang { color: rgb(180, 101, 77); }
+.html-for-mac .context-menu { --item-hover-bg-color: #E6F0FE; }
+#md-notification .btn { border: 0px; }
+.dropdown-menu .divider { border-color: rgb(229, 229, 229); }
+.ty-preferences .window-content { background-color: rgb(250, 250, 250); }
+.ty-preferences .nav-group-item.active { color: white; background: rgb(153, 153, 153); }
+
+
+</style>
+</head>
+<body class='typora-export os-windows' >
+<div  id='write'  class = 'is-node'><h1><a name="http协议" class="md-header-anchor"></a><span>HTTP协议</span></h1><p><span>HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。</span></p><p><span>HTTP是一个基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。</span></p><p><span>HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断地完善和扩展。目前在WWW中使用的是HTTP/1.0的第六版，HTTP/1.1的规范化工作正在进行之中，而且HTTP-NG(Next Generation of HTTP)的建议已经提出。</span></p><p><span>HTTP协议工作于客户端-服务端架构为上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据接收到的请求后，向客户端发送响应信息。</span></p><p><img src="https:////upload-images.jianshu.io/upload_images/2964446-5a35e17f298a48e1.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/551/format/webp" referrerpolicy="no-referrer" alt="img"></p><p><span>image</span></p><p><span># </span></p><h2><a name="http协议的主要特点" class="md-header-anchor"></a><span>HTTP协议的主要特点</span></h2><p><span>1、简单快速：客户向服务器请求服务时，只需传送请求方法和路径。请求方法常用的有GET、HEAD、POST。每种方法规定了客户与服务器联系的类型不同。由于HTTP协议简单，使得HTTP服务器的程序规模小，因而通信速度很快。</span></p><p><span>2、灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由Content-Type加以标记。</span></p><p><span>3.无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</span></p><p><span>4.无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</span>
+<span> 5、支持B/S及C/S模式。</span></p><p><span># </span></p><h2><a name="http协议与url的关系" class="md-header-anchor"></a><span>HTTP协议与URL的关系</span></h2><p><span>HTTP使用统一资源标识符（Uniform Resource Identifiers, URI）来传输数据和建立连接。URL是一种特殊类型的URI，包含了用于查找某个资源的足够的信息。</span></p><p><span>URL,全称是UniformResourceLocator, 中文叫统一资源定位符,是互联网上用来标识某一处资源的地址。以下面这个URL为例，介绍下普通URL的各部分组成：</span></p><pre spellcheck="false" class="md-fences md-end-block ty-contain-cm modeLoaded" lang="bash"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="bash"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 8.16406px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">http://www.aspxfans.com:8080/news/index.asp<span class="cm-def">?boardID</span><span class="cm-operator">=</span><span class="cm-number">5</span><span class="cm-def">&amp;ID</span><span class="cm-operator">=</span><span class="cm-number">24618</span><span class="cm-def">&amp;page</span><span class="cm-operator">=</span><span class="cm-number">1</span><span class="cm-comment">#name</span></span></pre></div></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 23px;"></div><div class="CodeMirror-gutters" style="display: none; height: 23px;"></div></div></div></pre><h5><a name="从上面的url可以看出一个完整的url包括以下几部分" class="md-header-anchor"></a><span>从上面的URL可以看出，一个完整的URL包括以下几部分：</span></h5><p><span># </span></p><p><span>1.协议部分：该URL的协议部分为“http”，这代表网页使用的是HTTP协议。在Internet中可以使用多种协议，如HTTP，FTP等等本例中使用的是HTTP协议。在&quot;HTTP&quot;后面的“//”为分隔符。</span></p><p><span>2.域名部分：该URL的域名部分为“</span><a href='https://links.jianshu.com/go?to=http%3A%2F%2Fwww.aspxfans.com'><span>www.aspxfans.com</span></a><span>”。一个URL中，也可以使用IP地址作为域名使用。</span></p><p><span>3.端口部分：跟在域名后面的是端口，域名和端口之间使用“:”作为分隔符。端口不是一个URL必须的部分，如果省略端口部分，将采用默认端口。</span></p><p><span>4.虚拟目录部分：从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”。</span></p><p><span>5.文件名部分：从域名后的最后一个“/”开始到“？”为止，是文件名部分，如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名。</span></p><p><span>6.锚部分：从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分。</span></p><p><span>7.参数部分：从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。本例中的参数部分为“boardID=5&amp;ID=24618&amp;page=1”。参数可以允许有多个参数，参数与参数之间用“&amp;”作为分隔符。</span></p><p><span># </span></p><h2><a name="uri和url的区别" class="md-header-anchor"></a><span>URI和URL的区别</span></h2><h5><a name="uri是uniform-resource-identifier统一资源标识符用来唯一的标识一个资源" class="md-header-anchor"></a><span>URI，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。</span></h5><p><span>Web上可用的每种资源如HTML文档、图像、视频片段、程序等都是一个来URI来定位的</span>
+<span> URI一般由三部组成：</span>
+<span> ①访问资源的命名机制</span>
+<span> ②存放资源的主机名</span>
+<span> ③资源自身的名称，由路径表示，着重强调于资源。</span></p><h5><a name="url是uniform-resource-locator统一资源定位器它是一种具体的uri即url可以用来标识一个资源而且还指明了如何locate这个资源" class="md-header-anchor"></a><span>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。</span></h5><p><span>URL是Internet上用来描述信息资源的字符串，主要用在各种WWW客户程序和服务器程序上，特别是著名的Mosaic。</span>
+<span> 采用URL可以用一种统一的格式来描述各种信息资源，包括文件、服务器的地址和目录等。URL一般由三部组成：</span>
+<span> ①协议(或称为服务方式)</span>
+<span> ②存有该资源的主机IP地址(有时也包括端口号)</span>
+<span> ③主机资源的具体地址。如目录和文件名等</span></p><h5><a name="urnuniform-resource-name统一资源命名是通过名字来标识资源比如mailtojava-netjavasuncomhttpslinksjianshucomgotomailto3ajava-net40javasuncom" class="md-header-anchor"></a><span>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如</span><a href='https://links.jianshu.com/go?to=mailto%3Ajava-net%40java.sun.com'><span>mailto:java-net@java.sun.com</span></a><span>。</span></h5><p><span>URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。笼统地说，每个 URL 都是 URI，但不一定每个 URI 都是 URL。这是因为 URI 还包括一个子类，即统一资源名称 (URN)，它命名资源但不指定如何定位资源。上面的 mailto、news 和 isbn URI 都是 URN 的示例。</span></p><p><span>在Java的URI中，一个URI实例可以代表绝对的，也可以是相对的，只要它符合URI的语法规则。而URL类则不仅符合语义，还包含了定位该资源的信息，因此它不能是相对的。</span>
+<span> 在Java类库中，URI类不包含任何访问资源的方法，它唯一的作用就是解析。</span>
+<span> 相反的是，URL类可以打开一个到达资源的流。</span></p><blockquote><p><span>HTTP之请求消息Request</span></p></blockquote><p><span>客户端发送一个HTTP请求到服务器的请求消息包括以下格式：</span></p><h5><a name="请求行request-line）请求头部header）空行和请求数据四个部分组成" class="md-header-anchor"></a><span>请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。</span></h5><p><img src="https:////upload-images.jianshu.io/upload_images/2964446-fdfb1a8fce8de946.png?imageMogr2/auto-orient/strip|imageView2/2/w/466/format/webp" referrerpolicy="no-referrer" alt="img"></p><p><span>image</span></p><ul><li><span>请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本。</span></li></ul><h5><a name="get请求例子使用charles抓取的request" class="md-header-anchor"></a><span>Get请求例子，使用Charles抓取的request：</span></h5><p><span># </span></p><pre spellcheck="false" class="md-fences md-end-block ty-contain-cm modeLoaded" lang="cpp"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="cpp"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 8.16406px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation" style=""><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">GET</span> <span class="cm-operator">/</span><span class="cm-number">562f25980001b1b106000338.jpg</span> <span class="cm-variable">HTTP</span><span class="cm-operator">/</span><span class="cm-number">1.1</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Host</span> &nbsp; &nbsp;<span class="cm-variable">img</span>.<span class="cm-variable">mukewang</span>.<span class="cm-variable">com</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">User</span><span class="cm-operator">-</span><span class="cm-variable">Agent</span> &nbsp; &nbsp;<span class="cm-variable">Mozilla</span><span class="cm-operator">/</span><span class="cm-number">5.0</span> (<span class="cm-variable">Windows</span> <span class="cm-variable">NT</span> <span class="cm-number">10.0</span>; <span class="cm-variable">WOW64</span>) <span class="cm-variable">AppleWebKit</span><span class="cm-operator">/</span><span class="cm-number">537.36</span> (<span class="cm-variable">KHTML</span>, <span class="cm-variable">like</span> <span class="cm-variable">Gecko</span>) <span class="cm-variable">Chrome</span><span class="cm-operator">/</span><span class="cm-number">51.0.2704.106</span> <span class="cm-variable">Safari</span><span class="cm-operator">/</span><span class="cm-number">537.36</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Accept</span> &nbsp; &nbsp;<span class="cm-variable">image</span><span class="cm-operator">/</span><span class="cm-variable">webp</span>,<span class="cm-variable">image</span><span class="cm-comment">/*,*/</span><span class="cm-operator">*</span>;<span class="cm-variable">q</span><span class="cm-operator">=</span><span class="cm-number">0.8</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Referer</span> &nbsp; &nbsp;<span class="cm-variable">http</span>:<span class="cm-comment">//www.imooc.com/</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Accept</span><span class="cm-operator">-</span><span class="cm-variable">Encoding</span> &nbsp; &nbsp;<span class="cm-variable">gzip</span>, <span class="cm-variable">deflate</span>, <span class="cm-variable">sdch</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Accept</span><span class="cm-operator">-</span><span class="cm-variable">Language</span> &nbsp; &nbsp;<span class="cm-variable">zh</span><span class="cm-operator">-</span><span class="cm-variable">CN</span>,<span class="cm-variable">zh</span>;<span class="cm-variable">q</span><span class="cm-operator">=</span><span class="cm-number">0.8</span></span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 180px;"></div><div class="CodeMirror-gutters" style="display: none; height: 180px;"></div></div></div></pre><h5><a name="第一部分请求行用来说明请求类型要访问的资源以及所使用的http版本" class="md-header-anchor"></a><span>第一部分：请求行，用来说明请求类型,要访问的资源以及所使用的HTTP版本.</span></h5><p><span>GET说明请求类型为GET,[/562f25980001b1b106000338.jpg]为要访问的资源，该行的最后一部分说明使用的是HTTP1.1版本。</span></p><h5><a name="第二部分请求头部紧接着请求行即第一行）之后的部分用来说明服务器要使用的附加信息" class="md-header-anchor"></a><span>第二部分：请求头部，紧接着请求行（即第一行）之后的部分，用来说明服务器要使用的附加信息</span></h5><p><span>从第二行起为请求头部，HOST将指出请求的目的地.User-Agent,服务器端和客户端脚本都能访问它,它是浏览器类型检测逻辑的重要基础.该信息由你的浏览器来定义,并且在每个请求中自动发送等等</span></p><h5><a name="第三部分空行请求头部后面的空行是必须的" class="md-header-anchor"></a><span>第三部分：空行，请求头部后面的空行是必须的</span></h5><p><span>即使第四部分的请求数据为空，也必须有空行。</span></p><h5><a name="第四部分请求数据也叫主体可以添加任意的其他数据" class="md-header-anchor"></a><span>第四部分：请求数据也叫主体，可以添加任意的其他数据。</span></h5><p><span>这个例子的请求数据为空。</span></p><h5><a name="post请求例子使用charles抓取的request" class="md-header-anchor"></a><span>POST请求例子，使用Charles抓取的request：</span></h5><p><span># </span></p><pre spellcheck="false" class="md-fences md-end-block ty-contain-cm modeLoaded" lang="objectivec"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="objectivec"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 8.16406px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation" style=""><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">POST</span> <span class="cm-operator">/</span> <span class="cm-variable">HTTP1</span>.<span class="cm-number">1</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Host</span>:<span class="cm-variable">www</span>.<span class="cm-variable">wrox</span>.<span class="cm-variable">com</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">User</span><span class="cm-operator">-</span><span class="cm-variable">Agent</span>:<span class="cm-variable">Mozilla</span><span class="cm-operator">/</span><span class="cm-number">4.0</span> (<span class="cm-variable">compatible</span>; <span class="cm-variable">MSIE</span> <span class="cm-number">6.0</span>; <span class="cm-variable">Windows</span> <span class="cm-variable">NT</span> <span class="cm-number">5.1</span>; <span class="cm-variable">SV1</span>; .<span class="cm-variable">NET</span> <span class="cm-variable">CLR</span> <span class="cm-number">2.0</span>.<span class="cm-number">50727</span>; .<span class="cm-variable">NET</span> <span class="cm-variable">CLR</span> <span class="cm-number">3.0</span>.<span class="cm-number">04506.648</span>; .<span class="cm-variable">NET</span> <span class="cm-variable">CLR</span> <span class="cm-number">3.5</span>.<span class="cm-number">21022</span>)</span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Content</span><span class="cm-operator">-</span><span class="cm-variable">Type</span>:<span class="cm-variable">application</span><span class="cm-operator">/</span><span class="cm-variable">x</span><span class="cm-operator">-</span><span class="cm-variable">www</span><span class="cm-operator">-</span><span class="cm-variable">form</span><span class="cm-operator">-</span><span class="cm-variable">urlencoded</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Content</span><span class="cm-operator">-</span><span class="cm-variable">Length</span>:<span class="cm-number">40</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Connection</span>: <span class="cm-variable">Keep</span><span class="cm-operator">-</span><span class="cm-variable">Alive</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">name</span><span class="cm-operator">=</span><span class="cm-variable">Professional</span><span class="cm-operator">%</span><span class="cm-number">20</span><span class="cm-variable">Ajax</span><span class="cm-operator">&amp;</span><span class="cm-variable">publisher</span><span class="cm-operator">=</span><span class="cm-variable">Wiley</span></span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 203px;"></div><div class="CodeMirror-gutters" style="display: none; height: 203px;"></div></div></div></pre><p><span>第一部分：请求行，第一行明了是post请求，以及http1.1版本。</span>
+<span> 第二部分：请求头部，第二行至第六行。</span>
+<span> 第三部分：空行，第七行的空行。</span>
+<span> 第四部分：请求数据，第八行。</span></p><blockquote><p><span>HTTP之响应消息Response</span></p></blockquote><p><span>一般情况下，服务器接收并处理客户端发过来的请求后会返回一个HTTP的响应消息。</span></p><h5><a name="http响应也由四个部分组成分别是状态行消息报头空行和响应正文" class="md-header-anchor"></a><span>HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。</span></h5><p><img src="https:////upload-images.jianshu.io/upload_images/2964446-1c4cab46f270d8ee.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/683/format/webp" referrerpolicy="no-referrer" alt="img"></p><p><span>image</span></p><h5><a name="例子" class="md-header-anchor"></a><span>例子</span></h5><pre spellcheck="false" class="md-fences md-end-block ty-contain-cm modeLoaded" lang="jsx"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="jsx"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 8.16406px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation" style=""><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">HTTP</span><span class="cm-operator">/</span><span class="cm-number">1.1</span> <span class="cm-number">200</span> <span class="cm-variable">OK</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Date</span>: <span class="cm-variable">Fri</span>, <span class="cm-number">22</span> <span class="cm-variable">May</span> <span class="cm-number">2009</span> <span class="cm-number">06</span>:<span class="cm-number">07</span>:<span class="cm-number">21</span> <span class="cm-variable">GMT</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Content</span><span class="cm-operator">-</span><span class="cm-variable">Type</span>: <span class="cm-variable">text</span><span class="cm-operator">/</span><span class="cm-variable">html</span>; <span class="cm-variable">charset</span><span class="cm-operator">=</span><span class="cm-variable">UTF</span><span class="cm-operator">-</span><span class="cm-number">8</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-operator">&lt;</span><span class="cm-variable">html</span><span class="cm-operator">&gt;</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;<span class="cm-tag cm-bracket">&lt;</span><span class="cm-tag">head</span><span class="cm-tag cm-bracket">&gt;&lt;/</span><span class="cm-tag">head</span><span class="cm-tag cm-bracket">&gt;</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;<span class="cm-tag cm-bracket">&lt;</span><span class="cm-tag">body</span><span class="cm-tag cm-bracket">&gt;</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-comment">&lt;!--body goes here--&gt;</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;<span class="cm-tag cm-bracket">&lt;/</span><span class="cm-tag">body</span><span class="cm-tag cm-bracket">&gt;</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-tag cm-bracket">&lt;/</span><span class="cm-tag cm-error">html</span><span class="cm-tag cm-bracket cm-error">&gt;</span></span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 225px;"></div><div class="CodeMirror-gutters" style="display: none; height: 225px;"></div></div></div></pre><h5><a name="第一部分状态行由http协议版本号-状态码-状态消息-三部分组成" class="md-header-anchor"></a><span>第一部分：状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</span></h5><p><span>第一行为状态行，（HTTP/1.1）表明HTTP版本为1.1版本，状态码为200，状态消息为（ok）</span></p><h5><a name="第二部分消息报头用来说明客户端要使用的一些附加信息" class="md-header-anchor"></a><span>第二部分：消息报头，用来说明客户端要使用的一些附加信息</span></h5><p><span>第二行和第三行为消息报头，</span>
+<span> Date:生成响应的日期和时间；Content-Type:指定了MIME类型的HTML(text/html),编码类型是UTF-8</span></p><h5><a name="第三部分空行消息报头后面的空行是必须的" class="md-header-anchor"></a><span>第三部分：空行，消息报头后面的空行是必须的</span></h5><h5><a name="第四部分响应正文服务器返回给客户端的文本信息" class="md-header-anchor"></a><span>第四部分：响应正文，服务器返回给客户端的文本信息。</span></h5><p><span>空行后面的html部分为响应正文。</span></p><blockquote><p><span>HTTP协议之状态码</span></p></blockquote><p><span>状态代码有三位数字组成，第一个数字定义了响应的类别，共分五种类别:</span></p><h6><a name="1xx指示信息--表示请求已接收继续处理" class="md-header-anchor"></a><span>1xx：指示信息--表示请求已接收，继续处理</span></h6><h6><a name="2xx成功--表示请求已被成功接收理解接受" class="md-header-anchor"></a><span>2xx：成功--表示请求已被成功接收、理解、接受</span></h6><h6><a name="3xx重定向--要完成请求必须进行更进一步的操作" class="md-header-anchor"></a><span>3xx：重定向--要完成请求必须进行更进一步的操作</span></h6><h6><a name="4xx客户端错误--请求有语法错误或请求无法实现" class="md-header-anchor"></a><span>4xx：客户端错误--请求有语法错误或请求无法实现</span></h6><h6><a name="5xx服务器端错误--服务器未能实现合法的请求" class="md-header-anchor"></a><span>5xx：服务器端错误--服务器未能实现合法的请求</span></h6><p><span>常见状态码：</span></p><p><span>200 OK                        //客户端请求成功</span>
+<span> 400 Bad Request               //客户端请求有语法错误，不能被服务器所理解</span>
+<span> 401 Unauthorized              //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用</span>
+<span> 403 Forbidden                 //服务器收到请求，但是拒绝提供服务</span>
+<span> 404 Not Found                 //请求资源不存在，eg：输入了错误的URL</span>
+<span> 500 Internal Server Error     //服务器发生不可预期的错误</span>
+<span> 503 Server Unavailable        //服务器当前不能处理客户端的请求，一段时间后可能恢复正常</span></p><p><span># </span></p><p><span>更多状态码</span><a href='https://links.jianshu.com/go?to=http%3A%2F%2Fwww.runoob.com%2Fhttp%2Fhttp-status-codes.html'><span>http://www.runoob.com/http/http-status-codes.html</span></a></p><h2><a name="http请求方法" class="md-header-anchor"></a><span>HTTP请求方法</span></h2><p><span>根据HTTP标准，HTTP请求可以使用多种请求方法。</span>
+<span> HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。</span>
+<span> HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。</span></p><p><span>GET     请求指定的页面信息，并返回实体主体。</span>
+<span> HEAD     类似于get请求，只不过返回的响应中没有具体的内容，用于获取报头</span>
+<span> POST     向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。</span>
+<span> PUT     从客户端向服务器传送的数据取代指定的文档的内容。</span>
+<span> DELETE      请求服务器删除指定的页面。</span>
+<span> CONNECT     HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。</span>
+<span> OPTIONS     允许客户端查看服务器的性能。</span>
+<span> TRACE     回显服务器收到的请求，主要用于测试或诊断。`</span></pre></p><blockquote><p><span>HTTP工作原理</span></p></blockquote><p><span>HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。</span></p><p><span>以下是 HTTP 请求/响应的步骤：</span></p><h6><a name="1客户端连接到web服务器" class="md-header-anchor"></a><span>1、客户端连接到Web服务器</span></h6><p><span>一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80）建立一个TCP套接字连接。例如，</span><a href='https://links.jianshu.com/go?to=http%3A%2F%2Fwww.oakcms.cn.%2F'><span>http://www.oakcms.cn。</span></a></p><h6><a name="2发送http请求" class="md-header-anchor"></a><span>2、发送HTTP请求</span></h6><p><span>通过TCP套接字，客户端向Web服务器发送一个文本的请求报文，一个请求报文由请求行、请求头部、空行和请求数据4部分组成。</span></p><h6><a name="3服务器接受请求并返回http响应" class="md-header-anchor"></a><span>3、服务器接受请求并返回HTTP响应</span></h6><p><span>Web服务器解析请求，定位请求资源。服务器将资源复本写到TCP套接字，由客户端读取。一个响应由状态行、响应头部、空行和响应数据4部分组成。</span></p><h6><a name="4释放连接tcp连接httpswwwjianshucompef892323e68f" class="md-header-anchor"></a><span>4、释放连接</span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP连接</span></a><span> </span></h6><p><span>若connection 模式为close，则服务器主动关闭</span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP连接</span></a><span>，客户端被动关闭连接，释放</span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP连接</span></a><span>;若connection 模式为keepalive，则该连接会保持一段时间，在该时间内可以继续接收请求;</span></p><h6><a name="5客户端浏览器解析html内容" class="md-header-anchor"></a><span>5、客户端浏览器解析HTML内容</span></h6><p><span>客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取响应数据HTML，根据HTML的语法对其进行格式化，并在浏览器窗口中显示。</span></p><p><span>例如：在浏览器地址栏键入URL，按下回车之后会经历以下流程：</span></p><p><span>1、浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址;</span></p><p><span>2、解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立</span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP连接</span></a><span>;</span></p><p><span>3、浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 </span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP 三次握手</span></a><span>的第三个报文的数据发送给服务器;</span></p><p><span>4、服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器;</span></p><p><span>5、释放 </span><a href='https://www.jianshu.com/p/ef892323e68f'><span>TCP连接</span></a><span>;</span></p><p><span>6、浏览器将该 html 文本并显示内容;</span></p><blockquote><p><span>GET和POST请求的区别</span></p></blockquote><h6><a name="get请求" class="md-header-anchor"></a><span>GET请求</span></h6><pre class="hljs cpp" style="margin: 0px 0px 0px 22px; white-space: pre-wrap; overflow-wrap: break-word; font-size: 1em;">GET /books/?sex=man&amp;name=Professional HTTP/1.1 Host: www.wrox.com User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6) Gecko/20050225 Firefox/1.0.1 Connection: Keep-Alive</pre><p><span>注意最后一行是空行</span></p><h6><a name="post请求" class="md-header-anchor"></a><span>POST请求</span></h6><pre class="hljs cpp" style="margin: 0px 0px 0px 22px; white-space: pre-wrap; overflow-wrap: break-word; font-size: 1em;">`POST / HTTP/1.1 Host: www.wrox.com User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6) Gecko/20050225 Firefox/1.0.1 Content-Type: application/x-www-form-urlencoded Content-Length: 40 Connection: Keep-Alive</pre><p><span>name=Professional%20Ajax&amp;publisher=Wiley`</span></pre></p><p><span>1、GET提交，请求的数据会附在URL之后（就是把数据放置在HTTP协议头中），以?分割URL和传输数据，多个参数用&amp;连接；例 如：login.action?name=hyddd&amp;password=idontknow&amp;verify=%E4%BD%A0 %E5%A5%BD。如果数据是英文字母/数字，原样发送，如果是空格，转换为+，如果是中文/其他字符，则直接把字符串用BASE64加密，得出如： %E4%BD%A0%E5%A5%BD，其中％XX中的XX为该符号以16进制表示的ASCII。</span></p><p><span>POST提交：把提交的数据放置在是HTTP包的包体中。上文示例中红色字体标明的就是实际的传输数据</span></p><h6><a name="因此get提交的数据会在地址栏中显示出来而post提交地址栏不会改变" class="md-header-anchor"></a><span>因此，GET提交的数据会在地址栏中显示出来，而POST提交，地址栏不会改变</span></h6><p><span>2、传输数据的大小：首先声明：HTTP协议没有对传输的数据大小进行限制，HTTP协议规范也没有对URL长度进行限制。</span></p><p><span>而在实际开发中存在的限制主要有：</span></p><p><strong><span>GET</span></strong><span>:特定浏览器和服务器对URL长度有限制，例如 IE对URL长度的限制是2083字节(2K+35)。对于其他浏览器，如Netscape、FireFox等，理论上没有长度限制，其限制取决于操作系 统的支持。</span></p><p><span>因此对于GET提交时，传输数据就会受到URL长度的 限制。</span></p><p><strong><span>POST</span></strong><span>:由于不是通过URL传值，理论上数据不受 限。但实际各个WEB服务器会规定对post提交数据大小进行限制，Apache、IIS6都有各自的配置。</span></p><p><span>3、安全性</span></p><p><span>POST的安全性要比GET的安全性高。比如：通过GET提交数据，用户名和密码将明文出现在URL上，因为(1)登录页面有可能被浏览器缓存；(2)其他人查看浏览器的历史纪录，那么别人就可以拿到你的账号和密码了，除此之外，使用GET提交数据还可能会造成Cross-site request forgery攻击</span></p><p><span>4、Http get,post,soap协议都是在http上运行的</span></p><p><span>（1）get：请求参数是作为一个key/value对的序列（查询字符串）附加到URL上的</span>
+<span> 查询字符串的长度受到web浏览器和web服务器的限制（如IE最多支持2048个字符），不适合传输大型数据集同时，它很不安全</span></p><p><span>（2）post：请求参数是在http标题的一个不同部分（名为entity body）传输的，这一部分用来传输表单信息，因此必须将Content-type设置为:application/x-www-form- urlencoded。post设计用来支持web窗体上的用户字段，其参数也是作为key/value对传输。</span>
+<span> 但是：它不支持复杂数据类型，因为post没有定义传输数据结构的语义和规则。</span></p><p><span>（3）soap：是http post的一个专用版本，遵循一种特殊的xml消息格式</span>
+<span> Content-type设置为: text/xml 任何数据都可以xml化。</span></p><p><span>Http协议定义了很多与服务器交互的方法，最基本的有4种，分别是GET,POST,PUT,DELETE. 一个URL地址用于描述一个网络上的资源，而HTTP中的GET, POST, PUT, DELETE就对应着对这个资源的查，改，增，删4个操作。 我们最常见的就是GET和POST了。GET一般用于获取/查询资源信息，而POST一般用于更新资源信息.</span></p><p><span>我们看看GET和POST的区别</span></p><ol start='' ><li><span>GET提交的数据会放在URL之后，以?分割URL和传输数据，参数之间以&amp;相连，如EditPosts.aspx?name=test1&amp;id=123456. POST方法是把提交的数据放在HTTP包的Body中.</span></li><li><span>GET提交的数据大小有限制（因为浏览器对URL的长度有限制），而POST方法提交的数据没有限制.</span></li><li><span>GET方式需要使用Request.QueryString来取得变量的值，而POST方式通过Request.Form来获取变量的值。</span></li><li><span>GET方式提交数据，会带来安全问题，比如一个登录页面，通过GET方式提交数据时，用户名和密码将出现在URL上，如果页面可以被缓存或者其他人可以访问这台机器，就可以从历史记录获得该用户的账号和密码.</span></li></ol></div>
+</body>
+</html>
